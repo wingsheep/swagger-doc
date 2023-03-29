@@ -39,7 +39,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
   private getTagItemData(name: string | undefined): TagItem[] {
     const treeData: any[] = name ? this.treeList?.find(item => item.name === name)?.children : this.treeList
     if (this.treeList && this.treeList.length) {
-      const toDep = (tagName: string, description: string, children: any[]): TagItem => {
+      const toDep = (tagName: string, description: string, children: any[], api: object): TagItem => {
         if (children && children.length) {
           const tips = `${tagName}${description}`
           return new TagItem(tagName, description, tips, 'folder.svg', vscode.TreeItemCollapsibleState.Collapsed)
@@ -47,17 +47,17 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
         else {
           const tagList = tagName.split(' ')
           const label = tagList[1]
-          const icon = `${tagList[0]}.svg`
+          const icon = tagList[0] ? `${tagList[0]}.svg` : 'null.svg'
           return new TagItem(label, description, tagName, icon, vscode.TreeItemCollapsibleState.None, {
-            command: 'extension.openPackageOnNpm',
+            command: 'swaggerDoc.preview',
             title: '',
-            arguments: [tagName],
+            arguments: [tagName, api],
           })
         }
       }
 
       const tagData = treeData
-        ? treeData.map(dep => toDep(dep.name, dep.description, dep.children))
+        ? treeData.map(dep => toDep(dep.name, dep.description, dep.children, dep.api))
         : []
       return tagData
     }

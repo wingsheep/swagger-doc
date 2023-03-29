@@ -1,21 +1,45 @@
 import * as vscode from 'vscode'
-import { getSwaggerJson } from './fetchData'
+import { SwaggerApi } from './swaggerApi'
 import { TagTreeProvider } from './tagTreeProvider'
+// import { DocWebviewProvider } from './docWebviewProvider'
+import { SwaggerPreviewPanel, getWebviewOptions } from './panelProvider'
 export async function activate(context: vscode.ExtensionContext) {
-  // const rootPath = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
-  //   ? vscode.workspace.workspaceFolders[0].uri.fsPath
-  //   : undefined
-  const treeList: any = await getSwaggerJson()
+  // const provider = new DocWebviewProvider(context.extensionUri)
 
-  const nodeDependenciesProvider = new TagTreeProvider(treeList)
-  vscode.window.registerTreeDataProvider('swaggerDoc', nodeDependenciesProvider)
+  // context.subscriptions.push(
+  //   vscode.window.registerWebviewViewProvider(DocWebviewProvider.viewType, provider),
+  // )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('swaggerDoc.doRefactor', () => {
+      if (SwaggerPreviewPanel.currentPanel)
+        SwaggerPreviewPanel.currentPanel.doRefactor()
+    }),
+  )
+
+  if (vscode.window.registerWebviewPanelSerializer) {
+    // Make sure we register a serializer in activation event
+    vscode.window.registerWebviewPanelSerializer(SwaggerPreviewPanel.viewType, {
+      async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
+        const { webviewPanelKey, title = 'review', apiDetailData } = state
+        // Reset the webview options so we use latest uri for `localResourceRoots`.
+        webviewPanel.webview.options = getWebviewOptions(context.extensionUri)
+        SwaggerPreviewPanel.revive(webviewPanel, webviewPanelKey, context.extensionUri, apiDetailData)
+      },
+    })
+  }
+
+  await SwaggerApi.getDocJson('https://dev-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs')
+  const tagTreeProvider = new TagTreeProvider(SwaggerApi.tagTree)
+  vscode.window.registerTreeDataProvider('swaggerDoc', tagTreeProvider)
   vscode.window.showInformationMessage('Hello vscode')
-  const disposable = vscode.commands.registerCommand('helloword.helloWorld', () => {
-    vscode.window.showErrorMessage(new Date().toLocaleDateString())
-    // window.showInformationMessage('Hello World from HelloWord!')
-  })
-
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('swaggerDoc.preview', (title, api) => {
+      const { path, method } = api
+      const apiDetailData = SwaggerApi.getApiDetail(path, method)
+      SwaggerPreviewPanel.createOrShow(context.extensionUri, title, apiDetailData)
+    }),
+  )
 }
 
 export function deactivate() {
