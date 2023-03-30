@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { SwaggerApi } from './swaggerApi'
 import { TagTreeProvider } from './tagTreeProvider'
 // import { DocWebviewProvider } from './docWebviewProvider'
-import { SwaggerPreviewPanel, getWebviewOptions } from './panelProvider'
+import { SwaggerPreviewPanel, getWebviewOptions } from './panels/previewPanel'
 export async function activate(context: vscode.ExtensionContext) {
   // const provider = new DocWebviewProvider(context.extensionUri)
 

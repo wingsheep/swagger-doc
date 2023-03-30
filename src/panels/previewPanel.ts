@@ -1,4 +1,6 @@
 import * as vscode from 'vscode'
+import { getUri } from '../utils/getUri'
+import { getNonce } from '../utils/getNonce'
 
 export function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
   return {
@@ -6,7 +8,12 @@ export function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptio
     enableScripts: true,
 
     // And restrict the webview to only loading content from our extension's `media` directory.
-    localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')],
+    // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
+    localResourceRoots: [
+      vscode.Uri.joinPath(extensionUri, 'media'),
+      vscode.Uri.joinPath(extensionUri, 'out'),
+      vscode.Uri.joinPath(extensionUri, 'webview-ui/build'),
+    ],
   }
 }
 
@@ -113,60 +120,37 @@ export class SwaggerPreviewPanel {
   }
 
   private _updateForDoc(webview: vscode.Webview, data: Object) {
-    this._panel.webview.html = this._getHtmlForWebview(webview, data)
+    this._panel.webview.html = this._getWebviewContent(webview, data)
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview, data: Object) {
-    // Local path to main script run in the webview
-    const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'main.js')
+  private _getWebviewContent(webview: vscode.Webview, data: Object) {
+    this._panel.webview.postMessage({
+      command: 'setMessage',
+      data,
+    })
+    // The CSS file from the Vue build output
+    const stylesUri = getUri(webview, this._extensionUri, ['webview-ui', 'build', 'assets', 'index.css'])
+    // The JS file from the Vue build output
+    const scriptUri = getUri(webview, this._extensionUri, ['webview-ui', 'build', 'assets', 'index.js'])
 
-    // And the uri we use to load this script in the webview
-    const scriptUri = webview.asWebviewUri(scriptPathOnDisk)
-
-    // Local path to css styles
-    const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'reset.css')
-    const stylesPathMainPath = vscode.Uri.joinPath(this._extensionUri, 'media', 'vscode.css')
-
-    // Uri to load styles into webview
-    const stylesResetUri = webview.asWebviewUri(styleResetPath)
-    const stylesMainUri = webview.asWebviewUri(stylesPathMainPath)
-
-    // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce()
 
-    return `
+    // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
+    return /* html */ `
       <!DOCTYPE html>
-        <html lang="en">
+      <html lang="en">
         <head>
-          <meta charset="UTF-8">
-
-          <!--
-            Use a content security policy to only allow loading images from https or from our extension directory,
-            and only allow scripts that have a specific nonce.
-          -->
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
-
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-          <link href="${stylesResetUri}" rel="stylesheet">
-          <link href="${stylesMainUri}" rel="stylesheet">
-
-          <title>swagger doc preview</title>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+          <link rel="stylesheet" type="text/css" href="${stylesUri}">
+          <title>Hello World</title>
         </head>
         <body>
-          <textarea>${JSON.stringify(data)}</textarea>
-          <h1 id="lines-of-code-counter">0</h1>
-          <script nonce="${nonce}" src="${scriptUri}"></script>
+          <div id="app"></div>
+          <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
         </body>
-        </html>`
+      </html>
+    `
   }
-}
-
-function getNonce() {
-  let text = ''
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < 32; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-
-  return text
 }
