@@ -21,23 +21,23 @@ export async function activate(context: vscode.ExtensionContext) {
     // Make sure we register a serializer in activation event
     vscode.window.registerWebviewPanelSerializer(SwaggerPreviewPanel.viewType, {
       async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-        const { webviewPanelKey, title = 'review', apiDetailData } = state
+        const { webviewPanelKey, serializerData } = state
         // Reset the webview options so we use latest uri for `localResourceRoots`.
         webviewPanel.webview.options = getWebviewOptions(context.extensionUri)
-        SwaggerPreviewPanel.revive(webviewPanel, webviewPanelKey, context.extensionUri, apiDetailData)
+        SwaggerPreviewPanel.revive(webviewPanel, webviewPanelKey, context.extensionUri, serializerData)
       },
     })
   }
 
-  await SwaggerApi.getDocJson('https://dev-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs')
+  await SwaggerApi.getDocJson('https://beta-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs')
   const tagTreeProvider = new TagTreeProvider(SwaggerApi.tagTree)
   vscode.window.registerTreeDataProvider('swaggerDoc', tagTreeProvider)
   vscode.window.showInformationMessage('Hello vscode')
   context.subscriptions.push(
     vscode.commands.registerCommand('swaggerDoc.preview', (title, api) => {
       const { path, method } = api
-      const apiDetailData = SwaggerApi.getApiDetail(path, method)
-      SwaggerPreviewPanel.createOrShow(context.extensionUri, title, apiDetailData)
+      const detailData = SwaggerApi.getApiDetail(path, method)
+      SwaggerPreviewPanel.createOrShow(context.extensionUri, title, { detailData, path, method })
     }),
   )
 }

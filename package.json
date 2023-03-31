@@ -39,7 +39,7 @@
       "activitybar": [
         {
           "id": "swaggerDoc",
-          "title": "Swagger doc",
+          "title": "Swagger Doc",
           "icon": "resources/logo.svg"
         }
       ]

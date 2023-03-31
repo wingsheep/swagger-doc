@@ -37,7 +37,11 @@ export class SwaggerApi {
     Object.keys(apiDetail.responses).forEach((code) => {
       const responseValue = apiDetail.responses[code] as (OpenAPIV2.ResponseObject | OpenAPIV2.ScopesObject)
       if (responseValue && responseValue?.schema)
-        responseValue.examples = getResponseExample(responseValue?.schema)
+        responseValue.examples = getSchemaExample(responseValue?.schema)
+    })
+    apiDetail.parameters?.forEach((parameter: any) => {
+      if (parameter.schema)
+        parameter.examples = getSchemaExample(parameter.schema)
     })
 
     return apiDetail
@@ -93,7 +97,7 @@ export class SwaggerApi {
    */
   private _getApiSchemas() {
     const { definitions } = SwaggerApi.docJson
-    const apiSchemas = []
+    const apiSchemas: any = []
     if (definitions) {
       Object.keys(definitions).forEach((definition) => {
         const definitionValue = definitions[definition]
@@ -112,7 +116,7 @@ export class SwaggerApi {
  * @param {*} schema
  * @return {*}
  */
-function getResponseExample(schema: any) {
+function getSchemaExample(schema: any) {
   const example = schema.example || generateExample(schema)
   return example
 }
