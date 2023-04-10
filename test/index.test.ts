@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { SwaggerApi } from '../src/swaggerApi'
-
+import { SwaggerApi } from '../src/api/swaggerApi'
 describe('should', () => {
   it('exported', async () => {
-    await SwaggerApi.getDocJson('https://beta-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs')
+    // const url = 'https://beta-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs'
+    const mockUrl = 'http://127.0.0.1:3000/v2/example'
+    await SwaggerApi.getDocJson(mockUrl)
     // await expect(SwaggerApi.docJson).toMatchInlineSnapshot()
     // await expect(SwaggerApi.tagTree).toMatchInlineSnapshot()
     // expect(SwaggerApi.getApiDetail('/accountBook/add', 'post')).toMatchInlineSnapshot()
@@ -32,7 +33,7 @@ describe('should', () => {
                 "address": "default string value",
                 "addressId": 0,
                 "location": "default string value",
-                "tittle": "default string value",
+                "title": "default string value",
               },
               "fileIds": [
                 "default string value",
@@ -42,7 +43,7 @@ describe('should', () => {
                 "address": "default string value",
                 "addressId": 0,
                 "location": "default string value",
-                "tittle": "default string value",
+                "title": "default string value",
               },
               "remarks": "给王总送的货",
               "startDate": "2023-02-10",
@@ -131,7 +132,7 @@ describe('should', () => {
                       "description": "lat<纬度>,lng<经度> 经纬度拼起来,逗号分隔",
                       "type": "string",
                     },
-                    "tittle": {
+                    "title": {
                       "allowEmptyValue": false,
                       "description": "地址标题",
                       "type": "string",
@@ -174,7 +175,7 @@ describe('should', () => {
                       "description": "lat<纬度>,lng<经度> 经纬度拼起来,逗号分隔",
                       "type": "string",
                     },
-                    "tittle": {
+                    "title": {
                       "allowEmptyValue": false,
                       "description": "地址标题",
                       "type": "string",

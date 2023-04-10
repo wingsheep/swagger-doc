@@ -7,10 +7,8 @@ export function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptio
     // Enable javascript in the webview
     enableScripts: true,
 
-    // And restrict the webview to only loading content from our extension's `media` directory.
     // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
     localResourceRoots: [
-      vscode.Uri.joinPath(extensionUri, 'media'),
       vscode.Uri.joinPath(extensionUri, 'out'),
       vscode.Uri.joinPath(extensionUri, 'webview-ui/build'),
     ],
@@ -25,7 +23,7 @@ export class SwaggerPreviewPanel {
   public static currentPanel: SwaggerPreviewPanel | undefined
   public static webviewPanels: Map<string, vscode.WebviewPanel> = new Map()
 
-  public static readonly viewType = 'swaggerDoc.preview'
+  public static readonly viewType = 'swaggerTag.preview'
 
   private readonly _webviewPanelKey: string
   private readonly _panel: vscode.WebviewPanel
@@ -57,6 +55,7 @@ export class SwaggerPreviewPanel {
 
   public static revive(panel: vscode.WebviewPanel, webviewPanelKey: string, extensionUri: vscode.Uri, data: object) {
     SwaggerPreviewPanel.currentPanel = new SwaggerPreviewPanel(panel, webviewPanelKey, extensionUri, data)
+    SwaggerPreviewPanel.webviewPanels.set(webviewPanelKey, panel)
   }
 
   private constructor(panel: vscode.WebviewPanel, webviewPanelKey: string, extensionUri: vscode.Uri, data: object) {
@@ -73,14 +72,14 @@ export class SwaggerPreviewPanel {
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
 
     // Update the content based on view changes
-    this._panel.onDidChangeViewState(
-      () => {
-        if (this._panel.visible)
-          this._update()
-      },
-      null,
-      this._disposables,
-    )
+    // this._panel.onDidChangeViewState(
+    //   () => {
+    //     if (this._panel.visible)
+    //       this._update()
+    //   },
+    //   null,
+    //   this._disposables,
+    // )
 
     // Handle messages from the webview
     this._panel.webview.onDidReceiveMessage(
@@ -120,14 +119,18 @@ export class SwaggerPreviewPanel {
   }
 
   private _updateForDoc(webview: vscode.Webview, data: Object) {
-    this._panel.webview.html = this._getWebviewContent(webview, data)
-  }
-
-  private _getWebviewContent(webview: vscode.Webview, data: Object) {
+    this._panel.webview.html = this._getWebviewContent(webview)
+    console.log('setMessage', data)
     this._panel.webview.postMessage({
       command: 'setMessage',
-      data,
+      data: {
+        previewData: data,
+        webviewPanelKey: this._webviewPanelKey,
+      },
     })
+  }
+
+  private _getWebviewContent(webview: vscode.Webview) {
     // The CSS file from the Vue build output
     const stylesUri = getUri(webview, this._extensionUri, ['webview-ui', 'build', 'assets', 'index.css'])
     // The JS file from the Vue build output
@@ -143,8 +146,8 @@ export class SwaggerPreviewPanel {
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
-          <link rel="stylesheet" type="text/css" href="${stylesUri}">
-          <title>Hello World</title>
+          <link rel="stylesheet" type="text/css" nonce="${nonce}" href="${stylesUri}">
+          <title>Swagger Doc</title>
         </head>
         <body>
           <div id="app"></div>

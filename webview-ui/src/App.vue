@@ -49,11 +49,15 @@ function changePanelTab(key) {
   activeId.value = key
 }
 window.addEventListener('message', (event) => {
+  console.log('event', event)
   const {
     command, data: {
-      detailData, path, method,
+      previewData, webviewPanelKey,
     },
   } = event.data
+  const {
+    detailData, path, method,
+  } = previewData
   switch (command) {
     case 'setMessage': {
       apiData.value = detailData
@@ -61,7 +65,8 @@ window.addEventListener('message', (event) => {
       responses.value = detailData?.responses
       apiUrl.value = path
       apiMethod.value = method
-      console.log(detailData)
+      console.log({ serializerData: previewData, webviewPanelKey })
+      vscode.setState({ serializerData: JSON.stringify(previewData), webviewPanelKey })
       break
     }
     default:

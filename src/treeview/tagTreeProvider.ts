@@ -18,7 +18,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
 
   getChildren(element?: TagItem): Thenable<TagItem[]> {
     if (!this.treeList) {
-      vscode.window.showInformationMessage('No data in empty workspace')
+      vscode.window.showInformationMessage('No data with the current URL')
       return Promise.resolve([])
     }
 
@@ -30,7 +30,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
         return Promise.resolve(this.getTagItemData(''))
       }
       else {
-        vscode.window.showInformationMessage('Workspace has no package.json')
+        vscode.window.showInformationMessage('No data in this tag')
         return Promise.resolve([])
       }
     }
@@ -49,7 +49,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
           const label = tagList[1]
           const icon = tagList[0] ? `${tagList[0]}.svg` : 'null.svg'
           return new TagItem(label, description, tagName, icon, vscode.TreeItemCollapsibleState.None, {
-            command: 'swaggerDoc.preview',
+            command: 'swaggerTag.preview',
             title: '',
             arguments: [tagName, api],
           })
@@ -64,6 +64,11 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
     else {
       return []
     }
+  }
+
+  async loadSwaggerList(treeList): Promise<void> {
+    this.treeList = treeList
+    this._onDidChangeTreeData.fire()
   }
 }
 

@@ -17,9 +17,14 @@ export class SwaggerApi {
    * @param {string} url https://dev-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs
    * @memberof SwaggerApi
    */
-  public static async getDocJson(url: string) {
-    const api = await SwaggerParser.dereference(url) as OpenAPIV2.Document
-    SwaggerApi.currentDoc = new SwaggerApi(api)
+  public static async getDocJson(url: string | OpenAPIV2.Document) {
+    try {
+      const api = await SwaggerParser.dereference(url) as OpenAPIV2.Document
+      SwaggerApi.currentDoc = new SwaggerApi(api)
+    }
+    catch (error) {
+      SwaggerApi.tagTree = undefined
+    }
   }
 
   /**

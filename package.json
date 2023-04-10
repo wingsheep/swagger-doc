@@ -23,7 +23,7 @@
   "categories": [
     "Other"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/extension.js",
   "icon": "resources/icon.png",
   "files": [
     "dist"
@@ -31,10 +31,18 @@
   "engines": {
     "vscode": "^1.69.0"
   },
-  "activationEvents": [
-    "onWebviewPanel:swaggerDoc"
-  ],
+  "activationEvents": [],
   "contributes": {
+    "viewsWelcome": [
+      {
+        "view": "swaggerTag",
+        "contents": "No data yet. \n You can add a new project or select an existing project \n[Add](command:swaggerManager.add) \n [Select](command:swaggerManager.search)"
+      },
+      {
+        "view": "swaggerManager",
+        "contents": "No data yet. \n You can add a new project \n[Add](command:swaggerManager.add)"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -47,33 +55,132 @@
     "views": {
       "swaggerDoc": [
         {
-          "id": "swaggerDoc",
-          "name": "Swagger Doc"
+          "id": "swaggerTag",
+          "name": "SwaggerTag"
+        },
+        {
+          "id": "swaggerManager",
+          "name": "Doc manager"
         }
       ]
     },
     "commands": [
       {
-        "command": "swaggerDoc.preview",
-        "title": "Preview swagger doc by api item",
-        "category": "Swagger Doc"
+        "command": "swaggerTag.loadDocData",
+        "title": "Load swagger json",
+        "category": "SwaggerTag"
       },
       {
-        "command": "swaggerDoc.doRefactor",
+        "command": "swaggerTag.refresh",
+        "title": "Refresh swagger json",
+        "category": "SwaggerTag",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "swaggerTag.preview",
+        "title": "Preview swagger doc",
+        "category": "SwaggerTag"
+      },
+      {
+        "command": "swaggerTag.doRefactor",
         "title": "Do some refactoring",
-        "category": "Swagger Doc"
+        "category": "SwaggerTag"
+      },
+      {
+        "command": "swaggerManager.refresh",
+        "title": "Refresh List",
+        "category": "swaggerManager",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "swaggerManager.open",
+        "title": "Open swagger manager file",
+        "category": "swaggerManager",
+        "icon": "$(book)"
+      },
+      {
+        "command": "swaggerManager.search",
+        "title": "Search swagger",
+        "category": "swaggerManager",
+        "icon": "$(search)"
+      },
+      {
+        "command": "swaggerManager.add",
+        "title": "Add swagger",
+        "category": "swaggerManager",
+        "icon": "$(add)"
+      },
+      {
+        "command": "swaggerManager.edit",
+        "title": "Edit swagger",
+        "category": "swaggerManager",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "swaggerManager.delete",
+        "title": "Delete swagger",
+        "category": "swaggerManager",
+        "icon": "$(remove)"
+      },
+      {
+        "command": "swaggerManager.toggle",
+        "title": "Toggle swagger",
+        "category": "swaggerManager"
       }
     ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "swaggerTag.refresh",
+          "when": "view == swaggerTag",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerManager.add",
+          "when": "view == swaggerManager",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerManager.search",
+          "when": "view == swaggerManager",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerManager.open",
+          "when": "view == swaggerManager",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerManager.refresh",
+          "when": "view == swaggerManager",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "swaggerManager.edit",
+          "when": "view == swaggerManager",
+          "group": "inline"
+        },
+        {
+          "command": "swaggerManager.delete",
+          "when": "view == swaggerManager",
+          "group": "inline"
+        }
+      ]
+    },
     "css": [
       "styles/treeview.css"
     ]
   },
   "workspaces": [
-    "webview-ui"
+    "webview-ui",
+    "backend"
   ],
   "scripts": {
-    "watch:ui": "pnpm -C webview-ui watch",
-    "build": "tsup src/index.ts --external vscode",
+    "watch": "pnpm -C webview-ui watch",
+    "server": "pnpm -C backend server",
+    "build": "tsup src/extension.ts --external vscode",
     "dev": "nr build --watch",
     "lint": "eslint .",
     "vscode:prepublish": "nr build",
@@ -85,7 +192,8 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
-    "axios": "^1.3.4"
+    "axios": "^1.3.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.2",
