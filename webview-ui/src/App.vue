@@ -49,7 +49,6 @@ function changePanelTab(key) {
   activeId.value = key
 }
 window.addEventListener('message', (event) => {
-  console.log('event', event)
   const {
     command, data: {
       previewData, webviewPanelKey,
@@ -65,7 +64,6 @@ window.addEventListener('message', (event) => {
       responses.value = detailData?.responses
       apiUrl.value = path
       apiMethod.value = method
-      console.log({ serializerData: previewData, webviewPanelKey })
       vscode.setState({ serializerData: JSON.stringify(previewData), webviewPanelKey })
       break
     }

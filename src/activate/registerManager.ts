@@ -5,9 +5,8 @@ import { isUrl } from '../utils/isUrl'
 export function activateManager(context: vscode.ExtensionContext) {
   const swaggerProvider = new SwaggerProvider(context)
   const swaggerManagerView = vscode.window.createTreeView('swaggerManager', { treeDataProvider: swaggerProvider, canSelectMany: false })
-  context.subscriptions.push(swaggerManagerView)
   swaggerProvider.loadSwaggerList()
-  vscode.commands.registerCommand('swaggerManager.add', async (node: SwaggerItem | undefined) => {
+  const addCommand = vscode.commands.registerCommand('swaggerManager.add', async (node: SwaggerItem | undefined) => {
     const label = await vscode.window.showInputBox({ prompt: 'Enter a url for the new swagger json' })
     if (!label)
       return
@@ -30,7 +29,7 @@ export function activateManager(context: vscode.ExtensionContext) {
     await vscode.commands.executeCommand('swaggerTag.loadDocData', label)
   })
 
-  vscode.commands.registerCommand('swaggerManager.edit', async (swaggerItem: SwaggerItem) => {
+  const editCommand = vscode.commands.registerCommand('swaggerManager.edit', async (swaggerItem: SwaggerItem) => {
     const newAlias = await vscode.window.showInputBox({ prompt: 'Enter a new alias for the current item', value: swaggerItem.alias })
     if (!newAlias)
       return
@@ -38,7 +37,7 @@ export function activateManager(context: vscode.ExtensionContext) {
     await swaggerProvider.editSwaggerItem(swaggerItem, newAlias)
   })
 
-  vscode.commands.registerCommand('swaggerManager.delete', async (swaggerItem: SwaggerItem) => {
+  const deleteCommand = vscode.commands.registerCommand('swaggerManager.delete', async (swaggerItem: SwaggerItem) => {
     const confirmation = await vscode.window.showWarningMessage(`Are you sure you want to delete "${swaggerItem.label}"?`, { modal: true }, 'Delete')
     if (confirmation !== 'Delete')
       return
@@ -46,15 +45,14 @@ export function activateManager(context: vscode.ExtensionContext) {
     await swaggerProvider.deleteSwaggerItem(swaggerItem)
   })
 
-  vscode.commands.registerCommand('swaggerManager.toggle', async (swaggerItem: SwaggerItem) => {
+  const toggleCommand = vscode.commands.registerCommand('swaggerManager.toggle', async (swaggerItem: SwaggerItem) => {
     await swaggerProvider.toggleSwaggerItem(swaggerItem)
   })
-  context.subscriptions.push(
-    vscode.commands.registerCommand('swaggerManager.refresh', () => swaggerProvider.loadSwaggerList()),
-  )
 
-  vscode.commands.registerCommand('swaggerManager.open', async () => {
-    // Swagger...
+  const refreshCommand = vscode.commands.registerCommand('swaggerManager.refresh', () => swaggerProvider.loadSwaggerList())
+
+  const openCommand = vscode.commands.registerCommand('swaggerManager.open', async () => {
+    // Todo...
     // const swaggerList = context.globalState.get<string>('swaggerList')
     // if (!swaggerList)
     //   return
@@ -66,4 +64,5 @@ export function activateManager(context: vscode.ExtensionContext) {
 
     // await vscode.window.showTextDocument(tempFile, { viewColumn: vscode.ViewColumn.Active })
   })
+  context.subscriptions.push(swaggerManagerView, addCommand, editCommand, deleteCommand, toggleCommand, refreshCommand, openCommand)
 }

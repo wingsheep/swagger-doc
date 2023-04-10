@@ -77,6 +77,12 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "swaggerTag.search",
+        "title": "Search swagger tag",
+        "category": "swaggerTag",
+        "icon": "$(search)"
+      },
+      {
         "command": "swaggerTag.preview",
         "title": "Preview swagger doc",
         "category": "SwaggerTag"
@@ -132,6 +138,11 @@
       "view/title": [
         {
           "command": "swaggerTag.refresh",
+          "when": "view == swaggerTag",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerTag.search",
           "when": "view == swaggerTag",
           "group": "navigation"
         },

@@ -36,8 +36,8 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
     }
   }
 
-  private getTagItemData(name: string | undefined): TagItem[] {
-    const treeData: any[] = name ? this.treeList?.find(item => item.name === name)?.children : this.treeList
+  private getTagItemData(label: string | undefined): TagItem[] {
+    const treeData: any[] = label ? this.treeList?.find(item => item.label === label)?.children : this.treeList
     if (this.treeList && this.treeList.length) {
       const toDep = (tagName: string, description: string, children: any[], api: object): TagItem => {
         if (children && children.length) {
@@ -57,7 +57,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
       }
 
       const tagData = treeData
-        ? treeData.map(dep => toDep(dep.name, dep.description, dep.children, dep.api))
+        ? treeData.map(dep => toDep(dep.label, dep.description, dep.children, dep.api))
         : []
       return tagData
     }

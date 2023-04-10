@@ -2,9 +2,18 @@ import SwaggerParser from '@apidevtools/swagger-parser'
 import type { OpenAPIV2, OpenAPIV3 } from 'openapi-types'
 
 interface TagTree {
-  name: string
+  label: string
   description: string
   children: any[]
+}
+interface TagList {
+  label: string
+  id: string
+  api: {
+    path: string
+    method: string
+    tags: string[]
+  }
 }
 export class SwaggerApi {
   public static currentDoc: SwaggerApi | undefined
@@ -12,6 +21,7 @@ export class SwaggerApi {
   public static docJson: OpenAPIV2.Document
   /** Swagger tag tree */
   public static tagTree: TagTree[] | undefined
+  public static tagList: TagList[]
   /**
    * Get swagger doc json
    * @param {string} url https://dev-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs
@@ -24,6 +34,7 @@ export class SwaggerApi {
     }
     catch (error) {
       SwaggerApi.tagTree = undefined
+      SwaggerApi.tagList = []
     }
   }
 
@@ -55,6 +66,7 @@ export class SwaggerApi {
   private constructor(data: OpenAPIV2.Document) {
     SwaggerApi.docJson = data
     SwaggerApi.tagTree = this._getTagTree()
+    SwaggerApi.tagList = this._getTagList()
   }
 
   /**
@@ -68,7 +80,7 @@ export class SwaggerApi {
     const apiTreeList: TagTree[] = []
     tags?.forEach((tag) => {
       const treeItem = {
-        name: tag.name,
+        label: tag.name,
         description: '',
         children: [] as any,
       }
@@ -78,7 +90,7 @@ export class SwaggerApi {
           const methodValue = (pathValue as OpenAPIV2.PathsObject)[method] as OpenAPIV2.OperationObject
           if (methodValue?.tags && methodValue.tags.includes(tag.name)) {
             treeItem.children.push({
-              name: `${method.toLocaleUpperCase()} ${methodValue.summary}`,
+              label: `${method.toLocaleUpperCase()} ${methodValue.summary}`,
               id: methodValue.operationId,
               api: {
                 method,
@@ -93,6 +105,17 @@ export class SwaggerApi {
       apiTreeList.push(treeItem)
     })
     return apiTreeList
+  }
+
+  /**
+   * Get tag list
+   * @private
+   * @return {*}
+   * @memberof SwaggerApi
+   */
+  private _getTagList() {
+    const list = flattenTree(SwaggerApi.tagTree)
+    return list
   }
 
   /**
@@ -114,6 +137,24 @@ export class SwaggerApi {
       })
     }
   }
+}
+/**
+ * Tree to list
+ * @param {*} tree
+ * @return {*}
+ */
+function flattenTree(tree: TagTree[] | undefined) {
+  if (!tree)
+    return []
+  const result: any = []
+  for (let i = 0; i < tree.length; i++) {
+    if (!tree[i].children)
+      result.push(tree[i])
+
+    if (tree[i].children)
+      result.push(...flattenTree(tree[i].children))
+  }
+  return result
 }
 
 /**

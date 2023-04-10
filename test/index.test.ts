@@ -7,233 +7,330 @@ describe('should', () => {
     await SwaggerApi.getDocJson(mockUrl)
     // await expect(SwaggerApi.docJson).toMatchInlineSnapshot()
     // await expect(SwaggerApi.tagTree).toMatchInlineSnapshot()
-    // expect(SwaggerApi.getApiDetail('/accountBook/add', 'post')).toMatchInlineSnapshot()
-    expect(SwaggerApi.getApiDetail('/freightTask/add', 'post')).toMatchInlineSnapshot(`
-      {
-        "consumes": [
-          "application/json",
-        ],
-        "operationId": "addUsingPOST_1",
-        "parameters": [
-          {
-            "description": "request",
-            "examples": {
-              "accountBookList": [
-                {
-                  "amount": 1000,
-                  "categoryName": "加油",
-                  "occurrenceTime": "yyyy-MM-dd",
-                  "remarks": "买的燃油宝",
-                  "taskId": 1750148943159,
-                  "type": 1,
-                },
-              ],
-              "customerId": 1559431138848817400,
-              "destinationDetail": {
-                "address": "default string value",
-                "addressId": 0,
-                "location": "default string value",
-                "title": "default string value",
-              },
-              "fileIds": [
-                "default string value",
-              ],
-              "goodsName": "钢筋5斤",
-              "originDetail": {
-                "address": "default string value",
-                "addressId": 0,
-                "location": "default string value",
-                "title": "default string value",
-              },
-              "remarks": "给王总送的货",
-              "startDate": "2023-02-10",
-              "tradeNo": "YD1559431138848817535",
-            },
-            "in": "body",
-            "name": "request",
-            "required": true,
-            "schema": {
-              "properties": {
-                "accountBookList": {
-                  "allowEmptyValue": false,
-                  "description": "记流水参数",
-                  "items": {
-                    "properties": {
-                      "amount": {
-                        "allowEmptyValue": false,
-                        "description": "金额 (单位分)",
-                        "example": 1000,
-                        "format": "int64",
-                        "type": "integer",
-                      },
-                      "categoryName": {
-                        "allowEmptyValue": false,
-                        "description": "类型名称",
-                        "example": "加油",
-                        "type": "string",
-                      },
-                      "occurrenceTime": {
-                        "allowEmptyValue": false,
-                        "description": "时间",
-                        "example": "yyyy-MM-dd",
-                        "format": "date",
-                        "type": "string",
-                      },
-                      "remarks": {
-                        "allowEmptyValue": false,
-                        "description": "备注",
-                        "example": "买的燃油宝",
-                        "type": "string",
-                      },
-                      "taskId": {
-                        "allowEmptyValue": false,
-                        "description": "运单id",
-                        "example": 1750148943159,
-                        "format": "int64",
-                        "type": "integer",
-                      },
-                      "type": {
-                        "allowEmptyValue": false,
-                        "description": "类别 0:收入 1:支出",
-                        "example": 1,
-                        "format": "int32",
-                        "type": "integer",
-                      },
-                    },
-                    "title": "AccountBookAddRequest",
-                    "type": "object",
-                  },
-                  "type": "array",
-                },
-                "customerId": {
-                  "allowEmptyValue": false,
-                  "description": "客户id",
-                  "example": 1559431138848817400,
-                  "format": "int64",
-                  "type": "integer",
-                },
-                "destinationDetail": {
-                  "allowEmptyValue": false,
-                  "description": "目的地地理位置信息",
-                  "properties": {
-                    "address": {
-                      "allowEmptyValue": false,
-                      "description": "详细地址",
-                      "type": "string",
-                    },
-                    "addressId": {
-                      "allowEmptyValue": false,
-                      "description": "地址id",
-                      "format": "int64",
-                      "type": "integer",
-                    },
-                    "location": {
-                      "allowEmptyValue": false,
-                      "description": "lat<纬度>,lng<经度> 经纬度拼起来,逗号分隔",
-                      "type": "string",
-                    },
-                    "title": {
-                      "allowEmptyValue": false,
-                      "description": "地址标题",
-                      "type": "string",
-                    },
-                  },
-                  "title": "AddressDetailRequest",
-                  "type": "object",
-                },
-                "fileIds": {
-                  "allowEmptyValue": false,
-                  "description": "文件id列表",
-                  "items": {
-                    "type": "string",
-                  },
-                  "type": "array",
-                },
-                "goodsName": {
-                  "allowEmptyValue": false,
-                  "description": "货物名称",
-                  "example": "钢筋5斤",
-                  "type": "string",
-                },
-                "originDetail": {
-                  "allowEmptyValue": false,
-                  "description": "起始地地理位置信息",
-                  "properties": {
-                    "address": {
-                      "allowEmptyValue": false,
-                      "description": "详细地址",
-                      "type": "string",
-                    },
-                    "addressId": {
-                      "allowEmptyValue": false,
-                      "description": "地址id",
-                      "format": "int64",
-                      "type": "integer",
-                    },
-                    "location": {
-                      "allowEmptyValue": false,
-                      "description": "lat<纬度>,lng<经度> 经纬度拼起来,逗号分隔",
-                      "type": "string",
-                    },
-                    "title": {
-                      "allowEmptyValue": false,
-                      "description": "地址标题",
-                      "type": "string",
-                    },
-                  },
-                  "title": "AddressDetailRequest",
-                  "type": "object",
-                },
-                "remarks": {
-                  "allowEmptyValue": false,
-                  "description": "备注",
-                  "example": "给王总送的货",
-                  "type": "string",
-                },
-                "startDate": {
-                  "allowEmptyValue": false,
-                  "description": "开始时间",
-                  "example": "2023-02-10",
-                  "format": "date",
-                  "type": "string",
-                },
-                "tradeNo": {
-                  "allowEmptyValue": false,
-                  "description": "业务单号",
-                  "example": "YD1559431138848817535",
-                  "type": "string",
-                },
-              },
-              "title": "FreightTaskAddRequest",
-              "type": "object",
-            },
+    await expect(SwaggerApi.tagList).toMatchInlineSnapshot(`
+      [
+        {
+          "api": {
+            "method": "get",
+            "path": "/profit/analysis/customer",
+            "tags": [
+              "利润分析",
+            ],
           },
-        ],
-        "produces": [
-          "*/*",
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-          },
-          "201": {
-            "description": "Created",
-          },
-          "401": {
-            "description": "Unauthorized",
-          },
-          "403": {
-            "description": "Forbidden",
-          },
-          "404": {
-            "description": "Not Found",
-          },
+          "id": "customerProfitAnalysisUsingGET",
+          "label": "GET 客户利润列表",
         },
-        "summary": "新增运单",
-        "tags": [
-          "运单任务相关",
-        ],
-      }
+        {
+          "api": {
+            "method": "get",
+            "path": "/profit/analysis/income",
+            "tags": [
+              "利润分析",
+            ],
+          },
+          "id": "incomeProfitAnalysisUsingGET",
+          "label": "GET 收入支出分析",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/profit/analysis/line",
+            "tags": [
+              "利润分析",
+            ],
+          },
+          "id": "lineProfitAnalysisUsingGET",
+          "label": "GET 线路利润列表",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/profit/analysis/monthlySummary",
+            "tags": [
+              "利润分析",
+            ],
+          },
+          "id": "detailUsingGET_1",
+          "label": "GET 月度汇总",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/profit/analysis/task",
+            "tags": [
+              "利润分析",
+            ],
+          },
+          "id": "taskProfitAnalysisUsingGET",
+          "label": "GET 任务利润列表",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/address/delete",
+            "tags": [
+              "地址簿相关",
+            ],
+          },
+          "id": "deleteUserAddressUsingPOST",
+          "label": "POST 删除用户地址簿",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/address/list",
+            "tags": [
+              "地址簿相关",
+            ],
+          },
+          "id": "listUsingGET_2",
+          "label": "GET 查看用户地址簿",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/address/vagueQuery",
+            "tags": [
+              "地址簿相关",
+            ],
+          },
+          "id": "vagueQueryUsingGET",
+          "label": "GET 模糊搜索",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/customer/add",
+            "tags": [
+              "客户相关",
+            ],
+          },
+          "id": "addUsingPOST_2",
+          "label": "POST 新增客户",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/customer/delete",
+            "tags": [
+              "客户相关",
+            ],
+          },
+          "id": "deleteUsingPOST_2",
+          "label": "POST 删除客户",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/customer/list",
+            "tags": [
+              "客户相关",
+            ],
+          },
+          "id": "listUsingGET_3",
+          "label": "GET 查看用户客户列表",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/accountCategory/add",
+            "tags": [
+              "收支分类相关",
+            ],
+          },
+          "id": "addAccountCategoryUsingPOST",
+          "label": "POST 新增账单类型",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/accountCategory/delete",
+            "tags": [
+              "收支分类相关",
+            ],
+          },
+          "id": "deleteAccountCategoryUsingPOST",
+          "label": "POST 删除账单类型",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/accountCategory/list",
+            "tags": [
+              "收支分类相关",
+            ],
+          },
+          "id": "accountCategoryListUsingGET",
+          "label": "GET 账单类型分类列表",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/accountBook/add",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "addUsingPOST",
+          "label": "POST 记支出/收入",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/accountBook/delete",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "deleteUsingPOST",
+          "label": "POST 删除账单流水",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/accountBook/detail",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "detailUsingGET",
+          "label": "GET 流水详情",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/accountBook/list",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "listUsingGET",
+          "label": "GET 查询流水记录",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/accountBook/listByTaskId",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "listByTaskIdUsingGET",
+          "label": "GET 根据运单任务id查询流水记录",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/accountBook/listByYearMonth",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "listByYearMonthUsingGET",
+          "label": "GET 根据年月日期 查询列表",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/accountBook/update",
+            "tags": [
+              "账单流水相关",
+            ],
+          },
+          "id": "updateUsingPOST",
+          "label": "POST 编辑支出/收入",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/freightTask/add",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "addUsingPOST_1",
+          "label": "POST 新增运单",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/freightTask/delete",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "deleteUsingPOST_1",
+          "label": "POST 删除运单",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/freightTask/getDetail",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "getDetailUsingGET",
+          "label": "GET 获取任务详情",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/freightTask/getQuery",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "getQueryUsingGET",
+          "label": "GET 获取筛选条件",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/freightTask/list",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "listUsingGET_1",
+          "label": "GET 运单列表",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/freightTask/listFromAnalysis",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "listFromAnalysisUsingGET",
+          "label": "GET 从利润分析跳转运单列表",
+        },
+        {
+          "api": {
+            "method": "post",
+            "path": "/freightTask/update",
+            "tags": [
+              "运单任务相关",
+            ],
+          },
+          "id": "updateUsingPOST_1",
+          "label": "POST 编辑运单",
+        },
+        {
+          "api": {
+            "method": "get",
+            "path": "/home/monthlySummary",
+            "tags": [
+              "首页相关",
+            ],
+          },
+          "id": "monthlySummaryUsingGET",
+          "label": "GET 首页月度统计",
+        },
+      ]
     `)
+    // expect(SwaggerApi.getApiDetail('/accountBook/add', 'post')).toMatchInlineSnapshot()
+    // expect(SwaggerApi.getApiDetail('/freightTask/add', 'post')).toMatchInlineSnapshot()
   })
 })
