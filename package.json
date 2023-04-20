@@ -71,6 +71,12 @@
         "category": "SwaggerTag"
       },
       {
+        "command": "swaggerTag.generateTs",
+        "title": "Generate typescript",
+        "category": "SwaggerTag",
+        "icon": "$(code)"
+      },
+      {
         "command": "swaggerTag.refresh",
         "title": "Refresh swagger json",
         "category": "SwaggerTag",
@@ -137,6 +143,11 @@
     "menus": {
       "view/title": [
         {
+          "command": "swaggerTag.generateTs",
+          "when": "view == swaggerTag",
+          "group": "navigation"
+        },
+        {
           "command": "swaggerTag.refresh",
           "when": "view == swaggerTag",
           "group": "navigation"
@@ -180,9 +191,17 @@
         }
       ]
     },
-    "css": [
-      "styles/treeview.css"
-    ]
+    "configuration": {
+      "title": "SwaggerDoc",
+      "properties": {
+        "swaggerDoc.templates": {
+          "type": "string",
+          "default": "<% const { config } = it; %>\n<% /* https://github.com/acacode/swagger-typescript-api/tree/next/templates/base/http-clients/ */ %>\n <%~ includeFile(`@base/http-clients/${config.httpClientType}-http-client`, it) %>",
+          "description": "http-client template",
+          "editPresentation": "multilineText"
+        }
+      }
+    }
   },
   "workspaces": [
     "webview-ui",
@@ -190,7 +209,7 @@
   ],
   "scripts": {
     "watch": "pnpm -C webview-ui watch",
-    "server": "pnpm -C backend server",
+    "server": "pnpm -C backend dev",
     "build": "tsup src/extension.ts --external vscode",
     "dev": "nr build --watch",
     "lint": "eslint .",

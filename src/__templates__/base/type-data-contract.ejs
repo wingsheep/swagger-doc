@@ -6,7 +6,7 @@ const { formatDescription, require, _ } = utils;
 <% if (contract.$content.length) { %>
 export type <%~ contract.name %> = {
   <% _.forEach(contract.$content, (field) => { %>
-    <%~ includeFile('./object-field-jsdoc.ejs', { ...it, field }) %>
+    <%~ includeFile('@base/object-field-jsdoc.ejs', { ...it, field }) %>
     <%~ field.field %>;
   <% }) %>
 }<%~ utils.isNeedToAddNull(contract) ? ' | null' : ''%>

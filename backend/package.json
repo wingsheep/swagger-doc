@@ -7,7 +7,7 @@
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "serve": "esno watch ./server.ts"
+    "dev": "esno watch ./server.ts"
   },
   "dependencies": {
     "esno": "^0.16.3"

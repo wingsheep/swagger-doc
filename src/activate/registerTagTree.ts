@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { SwaggerApi } from '../api/swaggerApi'
+import { generateCode } from '../api/generateCode'
 import { TagTreeProvider } from '../treeview/tagTreeProvider'
 import { SwaggerPreviewPanel, getWebviewOptions } from '../panels/previewPanel'
 export async function activateTagTree(context: vscode.ExtensionContext) {
@@ -44,6 +45,36 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
     SwaggerPreviewPanel.createOrShow(context.extensionUri, title, { detailData, path, method })
   })
 
+  const generateTsCommand = vscode.commands.registerCommand('swaggerTag.generateTs', async () => {
+    await vscode.window.showQuickPick(['TypeScript', 'JavaScript'], {
+      placeHolder: 'Select code language',
+    }).then(async (selectedItem) => {
+      if (selectedItem) {
+        const toJs = selectedItem === 'JavaScript'
+        const currentFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
+        const options: vscode.OpenDialogOptions = {
+          canSelectMany: false,
+          openLabel: 'Select folder',
+          canSelectFolders: true,
+          canSelectFiles: false,
+          defaultUri: currentFolder ? vscode.Uri.file(currentFolder) : undefined,
+        }
+
+        const result = await vscode.window.showOpenDialog(options)
+        if (result && result.length > 0) {
+          // 用户选择了文件夹
+          const folderPath = result[0].fsPath
+          generateCode(SwaggerApi.docJson, folderPath, toJs)
+          console.log('Selected folder: ', folderPath, toJs)
+        }
+        else {
+          // 用户取消了选择
+          console.log('No folder selected.')
+        }
+      }
+    })
+  })
+
   const searchCommand = vscode.commands.registerCommand('swaggerTag.search', async () => {
     const tagList = SwaggerApi.tagList || []
     let pickerList = [] as vscode.QuickPickItem[]
@@ -63,5 +94,5 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
         vscode.commands.executeCommand('swaggerTag.preview', label, api)
     })
   })
-  context.subscriptions.push(tagTreeView, loadDocDataCommand, refreshCommand, refactorCommand, previewCommand, searchCommand)
+  context.subscriptions.push(tagTreeView, loadDocDataCommand, refreshCommand, refactorCommand, previewCommand, searchCommand, generateTsCommand)
 }

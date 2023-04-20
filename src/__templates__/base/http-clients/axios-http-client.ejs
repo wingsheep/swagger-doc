@@ -119,7 +119,7 @@ export class HttpClient<SecurityDataType = unknown> {
           body = JSON.stringify(body);
         }
 
-        return this.instance.request({
+        return this.instance.request234({
             ...requestParams,
             headers: {
                 ...(requestParams.headers || {}),

@@ -1,6 +1,9 @@
+import path from 'path'
 import { describe, expect, it } from 'vitest'
 import { SwaggerApi } from '../src/api/swaggerApi'
-import { generate, generateTemplate } from '../src/api/swaggerToTs'
+import { generateCode } from '../src/api/generateCode'
+import SwaggerJson from '../backend/mock/swagger.json'
+
 describe('should', () => {
   it('exported', async () => {
     // const url = 'https://beta-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs'
@@ -14,8 +17,6 @@ describe('should', () => {
   })
 
   it('exported', async () => {
-    // const url = 'https://beta-apisix.hgj.com/sonny-vehicle-account-book/v2/api-docs'
-    // const mockUrl = 'http://127.0.0.1:3000/v2/example'
-    expect(generate()).toMatchInlineSnapshot('Promise {}')
+    expect(generateCode(SwaggerJson, path.resolve(process.cwd(), './test')))
   })
 })
