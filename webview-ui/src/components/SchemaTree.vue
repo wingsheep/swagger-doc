@@ -59,7 +59,7 @@ function switchFold(schema) {
         <span class="type">{{ schema.type }}</span>
         <span v-show="schema.title" class="format">{{ `(${schema.title})` }}</span>
       </div>
-      <div class="desc">
+      <div class="desc object-desc">
         {{ schema.description }}
       </div>
       <div v-for="(property, propkey) in schema.properties" v-show="!schema.hasHide" :key="propkey" class="property">
@@ -134,6 +134,13 @@ function switchFold(schema) {
   .svg-icon {
     width: 8px;
     cursor: pointer;
+  }
+  .object-desc {
+    color: #7d858e;
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 10px;
+    padding-left: 4px;
   }
   .property {
     padding: 8px 0;

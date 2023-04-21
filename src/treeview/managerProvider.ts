@@ -6,7 +6,7 @@ export interface SwaggerItem {
   id: string
   label: string
   alias: string
-  completed: boolean
+  selected: boolean
   children?: SwaggerItem[]
   parent?: SwaggerItem
 }
@@ -19,7 +19,7 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
     id: 'root',
     label: 'Swagger List',
     alias: 'Swagger List',
-    completed: false,
+    selected: false,
     children: [],
   }
 
@@ -28,14 +28,14 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
   getTreeItem(element: SwaggerItem): vscode.TreeItem {
     const treeItem = new vscode.TreeItem(element.alias, element.children ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None)
     treeItem.id = element.id
-    treeItem.iconPath = new ThemeIcon('link')
+    treeItem.iconPath = element.selected ? new ThemeIcon('check') : new ThemeIcon('remote')
     treeItem.tooltip = element.label
     treeItem.command = {
       title: 'Toggle Swagger',
       command: 'swaggerTag.loadDocData',
       arguments: [element.label],
     }
-    treeItem.contextValue = element.completed ? 'completedSwagger' : 'incompleteSwagger'
+    treeItem.contextValue = element.selected ? 'selectedSwagger' : 'unSelectedSwagger'
 
     return treeItem
   }
@@ -52,7 +52,7 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
       id: uuid(),
       label,
       alias,
-      completed: false,
+      selected: false,
       parent,
     }
 
@@ -66,8 +66,9 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
   }
 
   async editSwaggerItem(swaggerItem: SwaggerItem, newAlias: string): Promise<void> {
-    swaggerItem.alias = newAlias
-    this._onDidChangeTreeData.fire(swaggerItem)
+    const findItem = this._rootItem.children?.find(item => item.id === swaggerItem.id) || swaggerItem
+    findItem.alias = newAlias
+    this._onDidChangeTreeData.fire(findItem)
     await this.saveSwaggerList()
   }
 
@@ -77,7 +78,7 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
   }
 
   async toggleSwaggerItem(swaggerItem: SwaggerItem): Promise<void> {
-    swaggerItem.completed = !swaggerItem.completed
+    swaggerItem.selected = true
     this._onDidChangeTreeData.fire(swaggerItem)
     await this.saveSwaggerList()
     this.loadSwaggerList()

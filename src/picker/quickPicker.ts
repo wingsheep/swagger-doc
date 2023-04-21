@@ -6,7 +6,7 @@ import type { SwaggerItem } from '../treeview/managerProvider'
 /**
  * Shows a pick list using window.showQuickPick().
  */
-export async function showQuickPick(context: ExtensionContext) {
+export async function showQuickPick(context: ExtensionContext, callback) {
   const swaggerListString = context.globalState.get<string>('swaggerList')
   let pickerList = [] as vscode.QuickPickItem[]
   let swaggerList = [] as SwaggerItem[]
@@ -15,6 +15,7 @@ export async function showQuickPick(context: ExtensionContext) {
     pickerList = swaggerList.map((item) => {
       return {
         label: item.alias,
+        id: item.id,
         description: item.label,
       }
     }) as vscode.QuickPickItem[]
@@ -31,6 +32,6 @@ export async function showQuickPick(context: ExtensionContext) {
     onDidSelectItem: () => ++i,
   }).then((selectedItem) => {
     if (selectedItem?.label)
-      vscode.commands.executeCommand('swaggerTag.loadDocData', selectedItem.label)
+      callback(selectedItem)
   })
 }

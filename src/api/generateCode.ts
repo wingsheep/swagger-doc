@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import _ from 'lodash'
 
-import { generateApi, generateTemplates } from 'swagger-typescript-api'
+import { generateApi } from 'swagger-typescript-api'
 import type { Spec } from 'swagger-schema-official'
 
 const FILE_PREFIX = `/* eslint-disable */

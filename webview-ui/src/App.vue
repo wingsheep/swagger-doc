@@ -131,7 +131,7 @@ window.addEventListener('message', (event) => {
       </vscode-data-grid>
       <div v-if="bodyParameters">
         <div class="consumes">
-          Body参数（{{ apiData?.consumes && apiData?.consumes[0] }}）
+          Body参数（{{ apiData?.consumes && apiData?.consumes[0] || (apiData && apiData['x-contentType']) }}）
         </div>
         <div class="schema-view">
           <div class="schema">

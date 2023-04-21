@@ -23,7 +23,7 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
   const tagTreeProvider = new TagTreeProvider(SwaggerApi.tagTree)
   const tagTreeView = vscode.window.createTreeView('swaggerTag', {
     treeDataProvider: tagTreeProvider,
-    showCollapseAll: true, // 添加 showCollapseAll 选项
+    showCollapseAll: true,
   })
 
   const loadDocDataCommand = vscode.commands.registerCommand('swaggerTag.loadDocData', async (api) => {
@@ -33,6 +33,7 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
   })
 
   const refreshCommand = vscode.commands.registerCommand('swaggerTag.refresh', () => tagTreeProvider.refresh())
+  const clearAllCommand = vscode.commands.registerCommand('swaggerTag.clearAll', () => tagTreeProvider.clearAll())
 
   const refactorCommand = vscode.commands.registerCommand('swaggerTag.doRefactor', () => {
     if (SwaggerPreviewPanel.currentPanel)
@@ -45,7 +46,7 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
     SwaggerPreviewPanel.createOrShow(context.extensionUri, title, { detailData, path, method })
   })
 
-  const generateTsCommand = vscode.commands.registerCommand('swaggerTag.generateTs', async () => {
+  const generateTsCommand = vscode.commands.registerCommand('swaggerTag.generateCode', async () => {
     await vscode.window.showQuickPick(['TypeScript', 'JavaScript'], {
       placeHolder: 'Select code language',
     }).then(async (selectedItem) => {
@@ -62,14 +63,12 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
 
         const result = await vscode.window.showOpenDialog(options)
         if (result && result.length > 0) {
-          // 用户选择了文件夹
+          // select folder
           const folderPath = result[0].fsPath
           generateCode(SwaggerApi.docJson, folderPath, toJs)
-          console.log('Selected folder: ', folderPath, toJs)
         }
         else {
-          // 用户取消了选择
-          console.log('No folder selected.')
+          // cancel select folder
         }
       }
     })
@@ -94,5 +93,5 @@ export async function activateTagTree(context: vscode.ExtensionContext) {
         vscode.commands.executeCommand('swaggerTag.preview', label, api)
     })
   })
-  context.subscriptions.push(tagTreeView, loadDocDataCommand, refreshCommand, refactorCommand, previewCommand, searchCommand, generateTsCommand)
+  context.subscriptions.push(tagTreeView, loadDocDataCommand, previewCommand, generateTsCommand, searchCommand, clearAllCommand, refreshCommand, refactorCommand)
 }

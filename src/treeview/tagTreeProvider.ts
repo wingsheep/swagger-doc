@@ -12,6 +12,11 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
     this._onDidChangeTreeData.fire()
   }
 
+  clearAll(): void {
+    this.treeList = []
+    this.refresh()
+  }
+
   getTreeItem(element: TagItem): vscode.TreeItem {
     return element
   }
@@ -30,7 +35,7 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
         return Promise.resolve(this.getTagItemData(''))
       }
       else {
-        vscode.window.showInformationMessage('No data in this tag')
+        vscode.window.showInformationMessage('No data yet')
         return Promise.resolve([])
       }
     }
@@ -45,8 +50,9 @@ export class TagTreeProvider implements vscode.TreeDataProvider<TagItem> {
           return new TagItem(tagName, description, tips, 'folder.svg', vscode.TreeItemCollapsibleState.Collapsed)
         }
         else {
-          const tagList = tagName.split(' ')
-          const label = tagList[1]
+          const splitSymbol = ' '
+          const tagList = tagName.split(splitSymbol)
+          const label = tagList.slice(1, tagList.length).join(splitSymbol)
           const icon = tagList[0] ? `${tagList[0]}.svg` : 'null.svg'
           return new TagItem(label, description, tagName, icon, vscode.TreeItemCollapsibleState.None, {
             command: 'swaggerTag.preview',

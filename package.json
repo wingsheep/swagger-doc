@@ -67,14 +67,26 @@
     "commands": [
       {
         "command": "swaggerTag.loadDocData",
-        "title": "Load swagger json",
+        "title": "Load swagger data",
         "category": "SwaggerTag"
       },
       {
-        "command": "swaggerTag.generateTs",
-        "title": "Generate typescript",
+        "command": "swaggerTag.generateCode",
+        "title": "Generate code",
         "category": "SwaggerTag",
         "icon": "$(code)"
+      },
+      {
+        "command": "swaggerTag.search",
+        "title": "Search tags",
+        "category": "swaggerTag",
+        "icon": "$(search)"
+      },
+      {
+        "command": "swaggerTag.clearAll",
+        "title": "Clear all tags",
+        "category": "swaggerTag",
+        "icon": "$(clear-all)"
       },
       {
         "command": "swaggerTag.refresh",
@@ -83,38 +95,21 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "swaggerTag.search",
-        "title": "Search swagger tag",
-        "category": "swaggerTag",
-        "icon": "$(search)"
-      },
-      {
         "command": "swaggerTag.preview",
         "title": "Preview swagger doc",
         "category": "SwaggerTag"
-      },
-      {
-        "command": "swaggerTag.doRefactor",
-        "title": "Do some refactoring",
-        "category": "SwaggerTag"
-      },
-      {
-        "command": "swaggerManager.refresh",
-        "title": "Refresh List",
-        "category": "swaggerManager",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "swaggerManager.open",
-        "title": "Open swagger manager file",
-        "category": "swaggerManager",
-        "icon": "$(book)"
       },
       {
         "command": "swaggerManager.search",
         "title": "Search swagger",
         "category": "swaggerManager",
         "icon": "$(search)"
+      },
+      {
+        "command": "swaggerManager.refresh",
+        "title": "Refresh List",
+        "category": "swaggerManager",
+        "icon": "$(refresh)"
       },
       {
         "command": "swaggerManager.add",
@@ -143,17 +138,22 @@
     "menus": {
       "view/title": [
         {
-          "command": "swaggerTag.generateTs",
-          "when": "view == swaggerTag",
-          "group": "navigation"
-        },
-        {
-          "command": "swaggerTag.refresh",
+          "command": "swaggerTag.generateCode",
           "when": "view == swaggerTag",
           "group": "navigation"
         },
         {
           "command": "swaggerTag.search",
+          "when": "view == swaggerTag",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerTag.clearAll",
+          "when": "view == swaggerTag",
+          "group": "navigation"
+        },
+        {
+          "command": "swaggerTag.refresh",
           "when": "view == swaggerTag",
           "group": "navigation"
         },
@@ -164,11 +164,6 @@
         },
         {
           "command": "swaggerManager.search",
-          "when": "view == swaggerManager",
-          "group": "navigation"
-        },
-        {
-          "command": "swaggerManager.open",
           "when": "view == swaggerManager",
           "group": "navigation"
         },
@@ -190,17 +185,6 @@
           "group": "inline"
         }
       ]
-    },
-    "configuration": {
-      "title": "SwaggerDoc",
-      "properties": {
-        "swaggerDoc.templates": {
-          "type": "string",
-          "default": "<% const { config } = it; %>\n<% /* https://github.com/acacode/swagger-typescript-api/tree/next/templates/base/http-clients/ */ %>\n <%~ includeFile(`@base/http-clients/${config.httpClientType}-http-client`, it) %>",
-          "description": "http-client template",
-          "editPresentation": "multilineText"
-        }
-      }
     }
   },
   "workspaces": [
@@ -222,6 +206,7 @@
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
+    "api-spec-converter": "^2.12.0",
     "axios": "^1.3.4",
     "swagger-typescript-api": "^12.0.4",
     "uuid": "^9.0.0"

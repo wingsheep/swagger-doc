@@ -2,5 +2,6 @@
   "cSpell.words": [
     "activeid",
     "APIV"
-  ]
+  ],
+  "vue.features.codeActions.enable": false
 }
