@@ -1,5 +1,11 @@
-src
-node_modules
+webview-ui/
+!webview-ui/build
+backend
+
+tsconfig.json
+tsup.config.ts
 test
-.github
+# node_modules
+src/
 .vscode
+.github

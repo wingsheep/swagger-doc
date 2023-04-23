@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ThemeIcon } from 'vscode'
-import { v4 as uuid } from 'uuid'
+import { generateUUID } from '../utils/uuid'
 
 export interface SwaggerItem {
   id: string
@@ -49,7 +49,7 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
 
   async addSwaggerItem({ label, alias }, parent?: SwaggerItem): Promise<void> {
     const swaggerItem: SwaggerItem = {
-      id: uuid(),
+      id: generateUUID(),
       label,
       alias,
       selected: false,
@@ -95,6 +95,7 @@ export class SwaggerProvider implements vscode.TreeDataProvider<SwaggerItem> {
     if (swaggerList) {
       const items = JSON.parse(swaggerList) as SwaggerItem[]
       this._rootItem.children = items || []
+      // @ts-ignore
       this._onDidChangeTreeData.fire()
       return items
     }

@@ -192,9 +192,10 @@
     "backend"
   ],
   "scripts": {
-    "watch": "pnpm -C webview-ui watch",
     "server": "pnpm -C backend dev",
-    "build": "tsup src/extension.ts --external vscode",
+    "watch": "pnpm -C webview-ui watch",
+    "build:web": "pnpm -C webview-ui build",
+    "build": "tsup-node",
     "dev": "nr build --watch",
     "lint": "eslint .",
     "vscode:prepublish": "nr build",
@@ -208,12 +209,12 @@
     "@apidevtools/swagger-parser": "^10.1.0",
     "api-spec-converter": "^2.12.0",
     "axios": "^1.3.4",
-    "swagger-typescript-api": "^12.0.4",
-    "uuid": "^9.0.0"
+    "swagger-typescript-api": "^12.0.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.2",
     "@antfu/ni": "^0.17.2",
+    "@swc/core": "^1.3.53",
     "@types/node": "^18.6.4",
     "@types/vscode": "^1.69.0",
     "bumpp": "^8.2.1",

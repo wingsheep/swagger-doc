@@ -266,7 +266,7 @@ function getDefaultByType(type: OpenAPIV3.NonArraySchemaObjectType): unknown {
 }
 
 /**
- * 请求接口获取数据
+ * Request the interface for data
  * @param {string} url
  * @return {*}
  */
@@ -277,7 +277,7 @@ async function fetchData(url: string) {
 }
 
 /**
- * 各类型文档版本枚举
+ * Enumeration of document versions of each type
  * @export
  * @enum {number}
  */
@@ -294,12 +294,11 @@ export enum DocVersion {
 }
 
 /**
- * 获取swagger json对应的版本
+ * Get the corresponding version of swagger json
  * @param {*} swaggerJson
  * @return {*}  {DocVersion}
  */
 function getSwaggerVersion(swaggerJson): DocVersion {
-  // 假设 swaggerJson 为 Swagger JSON 数据
   if (swaggerJson.swagger && swaggerJson.swagger.startsWith('1.'))
     return DocVersion.swagger_1
 

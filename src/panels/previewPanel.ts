@@ -74,7 +74,6 @@ export class SwaggerPreviewPanel {
     // Update the content based on view changes
     this._panel.onDidChangeViewState(
       () => {
-        console.log(234, this._panel.visible)
         if (this._panel.visible)
           this._update()
       },
