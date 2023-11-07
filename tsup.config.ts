@@ -12,10 +12,10 @@ export default defineConfig({
     'vscode',
   ],
   noExternal: [
-    'axios',
-    'api-spec-converter',
-    '@apidevtools',
-    'swagger-typescript-api',
-    '@jsdevtools/ono',
+    // 'axios',
+    // 'api-spec-converter',
+    // '@apidevtools',
+    // 'swagger-typescript-api',
+    // '@jsdevtools/ono',
   ],
 })
